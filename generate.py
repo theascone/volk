@@ -146,10 +146,13 @@ if __name__ == "__main__":
 			if name == 'vkGetDeviceProcAddr':
 				type = 'VkInstance'
 
+			assert name[:2] == "vk"
+			sname = name[2:]
+
 			if is_descendant_type(types, type, 'VkDevice') and name not in instance_commands:
 				blocks['LOAD_DEVICE'] += '\t' + name + ' = (PFN_' + name + ')load(context, "' + name + '");\n'
-				blocks['DEVICE_TABLE'] += '\tPFN_' + name + ' ' + name + ';\n'
-				blocks['LOAD_DEVICE_TABLE'] += '\ttable->' + name + ' = (PFN_' + name + ')load(context, "' + name + '");\n'
+				blocks['DEVICE_TABLE'] += '\tPFN_' + name + ' ' + sname + ';\n'
+				blocks['LOAD_DEVICE_TABLE'] += '\ttable->' + sname + ' = (PFN_' + name + ')load(context, "' + name + '");\n'
 			elif is_descendant_type(types, type, 'VkInstance'):
 				blocks['LOAD_INSTANCE'] += '\t' + name + ' = (PFN_' + name + ')load(context, "' + name + '");\n'
 			elif type != '':
